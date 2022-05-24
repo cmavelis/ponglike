@@ -39,12 +39,18 @@ export default class Demo extends Phaser.Scene {
 
   update() {
 
-    const moveVelocity = 1000;
+    const paddleAccel = 1000;
     if (this.cursors.left.isDown) {
-      this.paddle.setAccelerationX(-moveVelocity);
+      this.paddle.setAccelerationX(-paddleAccel);
     } else if (this.cursors.right.isDown) {
-      this.paddle.setAccelerationX(moveVelocity);
-    } else {
+      this.paddle.setAccelerationX(paddleAccel);
+    } else if (this.cursors.up.isDown) {
+      if (this.paddle.body.velocity.x >= 0) {
+        this.paddle.setAccelerationX(paddleAccel);
+      } else {
+        this.paddle.setAccelerationX(-paddleAccel);
+      }
+    }else {
       this.paddle.setAccelerationX(0);
     }
     // if (this.cursors.up.isDown)
