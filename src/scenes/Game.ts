@@ -1,12 +1,12 @@
-import Phaser from 'phaser';
+import * as Phaser from 'phaser';
 import Frame = Phaser.Textures.Frame;
 
 export default class Demo extends Phaser.Scene {
   // private paddle: ;
   // private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private ball: any;
-  private paddles: any;
-  private paddleObject = {};
+  private paddles?: Phaser.Physics.Arcade.Group;
+  private paddleObject: {bottom?: Phaser.Physics.Arcade.Body, top?: Phaser.Physics.Arcade.Body} = {};
   private cursors: any;
   constructor() {
     super('GameScene');
@@ -65,12 +65,12 @@ export default class Demo extends Phaser.Scene {
    if (this.cursors.up.isDown) {
      this.accelerateForward(this.paddleObject.top,paddleAccel, true)
     } else {
-     this.paddleObject.top.setAccelerationX(0);
+     this.paddleObject.top?.setAccelerationX(0);
     }
     if (this.cursors.down.isDown) {
       this.accelerateForward(this.paddleObject.bottom,paddleAccel, true)
     } else {
-      this.paddleObject.bottom.setAccelerationX(0);
+      this.paddleObject.bottom?.setAccelerationX(0);
     }
 
     // if (this.cursors.up.isDown)
