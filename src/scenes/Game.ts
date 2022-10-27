@@ -5,6 +5,7 @@ export default class Demo extends Phaser.Scene {
   // private paddle: ;
   // private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private ball: any;
+  private gameOver = false;
   private paddles?: Phaser.Physics.Arcade.Group;
   private paddleObject: {bottom?: Phaser.Physics.Arcade.Body, top?: Phaser.Physics.Arcade.Body} = {};
   private cursors: any;
@@ -50,6 +51,7 @@ export default class Demo extends Phaser.Scene {
     this.ball = this.physics.add.image(20, 20, 'ball')
     this.ball.setTintFill(0xffffff)
     this.ball.setCollideWorldBounds(true);
+    this.ball.body.onWorldBounds = true;
     this.ball.setBounce(1)
 
     this.physics.add.collider(this.paddles, this.ball)
@@ -57,6 +59,15 @@ export default class Demo extends Phaser.Scene {
     let ballSpeed
     this.ball.setVelocityX(140)
     this.ball.setVelocityY(140)
+
+    const endGame = () => {
+      this.physics.pause();
+
+      this.ball.setTint(0xff0000);
+
+      this.gameOver = true;
+    }
+    this.physics.world.on('worldbounds', endGame);
   }
 
   update() {
@@ -72,14 +83,5 @@ export default class Demo extends Phaser.Scene {
     } else {
       this.paddleObject.bottom?.setAccelerationX(0);
     }
-
-    // if (this.cursors.up.isDown)
-    // {
-    //   this.paddle.setVelocityY(-moveVelocity);
-    // }
-    // if (this.cursors.down.isDown)
-    // {
-    //   this.paddle.setVelocityY(moveVelocity);
-    // }
   }
 }
