@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser';
+import config from '../config';
 import Frame = Phaser.Textures.Frame;
 
 export default class Demo extends Phaser.Scene {
@@ -7,7 +8,9 @@ export default class Demo extends Phaser.Scene {
   private ball: any;
   private gameOver = false;
   private paddles?: Phaser.Physics.Arcade.Group;
-  private paddleObject: {bottom?: Phaser.Physics.Arcade.Body, top?: Phaser.Physics.Arcade.Body} = {};
+  private paddleObject: {[key: string]: Phaser.Physics.Arcade.Body} = {};
+  private paddleHeight = 20;
+  private paddleWidth = 160;
   private cursors: any;
   constructor() {
     super('GameScene');
@@ -38,17 +41,28 @@ export default class Demo extends Phaser.Scene {
 
     this.paddles = this.physics.add.group()
 
-    this.paddleObject.top = this.paddles.create(40, 40, 'paddle', )
-    this.paddleObject.bottom = this.paddles.create(40, 560, 'paddle')
+    const paddleOffset = 40
+
+    this.paddleObject.top = this.paddles
+      .create(config.scale.width/2, paddleOffset, 'paddle', )
+      .setDisplaySize(this.paddleWidth, this.paddleHeight)
+    this.paddleObject.bottom = this.paddles
+      .create(config.scale.width/2, config.scale.height - paddleOffset, 'paddle')
+      .setDisplaySize(this.paddleWidth, this.paddleHeight)
+    this.paddleObject.left = this.paddles
+      .create(paddleOffset, config.scale.width, 'paddle')
+      .setDisplaySize(this.paddleHeight, config.scale.height)
+    this.paddleObject.right = this.paddles
+      .create(config.scale.width - paddleOffset, config.scale.width, 'paddle')
+      .setDisplaySize(this.paddleHeight, config.scale.height)
     this.paddles.children.iterate((c: any) => {
       c.setTintFill(0xffffff)
-      .setDisplaySize(160, 20)
       .setCollideWorldBounds(true)
       .setPushable(false)
       .setBounce(0.5)
     })
 
-    this.ball = this.physics.add.image(20, 20, 'ball')
+    this.ball = this.physics.add.image(80, 80, 'ball')
     this.ball.setTintFill(0xffffff)
     this.ball.setCollideWorldBounds(true);
     this.ball.body.onWorldBounds = true;
@@ -63,7 +77,7 @@ export default class Demo extends Phaser.Scene {
     const endGame = () => {
       this.physics.pause();
 
-      this.ball.setTint(0xff0000);
+      this.ball.setTintFill(0xff0000);
 
       this.gameOver = true;
     }
