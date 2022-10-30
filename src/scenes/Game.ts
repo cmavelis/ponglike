@@ -11,7 +11,6 @@ export default class Demo extends Phaser.Scene {
   private paddleObject: { [key: string]: Phaser.Physics.Arcade.Body } = {}
   private paddleHeight = 20
   private paddleWidth = 160
-  private newPaddleWidth = 300
 
   // meta
   private cursors: any
@@ -41,7 +40,15 @@ export default class Demo extends Phaser.Scene {
     }
   }
 
-  onBallHit = () => {
+  onBallHit = (object1: Phaser.GameObjects.GameObject, object2: Phaser.GameObjects.GameObject) => {
+    [object1, object2].forEach((o) => {
+      if (o.name === 'paddle'){
+        console.log(o)
+        // @ts-ignore  this line works :shrug:
+        o.setScale(o._scaleX * 0.9, o._scaleY)
+      }
+    }
+      )
     this.score += 1
     this.scoreText.setText(this.score.toString())
   }
@@ -79,6 +86,7 @@ export default class Demo extends Phaser.Scene {
         .setCollideWorldBounds(true)
         .setPushable(false)
         .setBounce(0.5)
+        .setName('paddle')
     })
 
     // ball
@@ -86,7 +94,7 @@ export default class Demo extends Phaser.Scene {
     this.ball.setTintFill(0xffffff)
     this.ball.setCollideWorldBounds(true)
     this.ball.body.onWorldBounds = true
-    this.ball.setBounce(1)
+    this.ball.setBounce(1).setName('ball')
 
     this.physics.add.collider(this.paddles, this.ball, this.onBallHit)
 
