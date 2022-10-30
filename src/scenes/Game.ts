@@ -13,12 +13,12 @@ export default class Demo extends Phaser.Scene {
   private paddleWidth = 160
   private newPaddleWidth = 300
 
-// meta
+  // meta
   private cursors: any
   private score: number = 0
   private scoreText!: Phaser.GameObjects.Text
   private gameOver = false
-
+  private announcementText!: Phaser.GameObjects.Text
 
   constructor() {
     super('GameScene')
@@ -167,7 +167,16 @@ export default class Demo extends Phaser.Scene {
     )
     this.physics.add.collider(this.walls, this.ball)
 
-    this.scoreText = this.add.text(10, 10, '0', { color: '#ff0000', fontSize: '32px' });
+    this.scoreText = this.add.text(10, 10, '0', {
+      color: '#ff0000',
+      fontSize: '32px',
+    })
+    this.announcementText = this.add.text(
+      config.scale.width / 2,
+      config.scale.height / 2,
+      '',
+      { color: '#fff', fontSize: '32px' }
+    ).setOrigin(0.5)
 
     // endgame conditions
     const endGame = () => {
@@ -194,5 +203,15 @@ export default class Demo extends Phaser.Scene {
     } else {
       this.paddleObject.bottom?.setAccelerationX(0)
     }
+
+    // // use this to delete the walls and expose extra paddles
+    // if (this.score === 2) {
+    //   this.walls.clear(true)
+    // }
+
+    // game over
+    if (this.gameOver) {
+      this.announcementText.setText('GAME OVER\nREFRESH TO RETRY')
+    }   
   }
 }
