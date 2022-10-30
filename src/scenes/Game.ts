@@ -6,10 +6,12 @@ export default class Demo extends Phaser.Scene {
   // game objects
   private ball: any
   private corners: any
-  private paddles?: Phaser.Physics.Arcade.Group
+  private walls: any
+  private paddles!: Phaser.Physics.Arcade.Group
   private paddleObject: { [key: string]: Phaser.Physics.Arcade.Body } = {}
   private paddleHeight = 20
   private paddleWidth = 160
+  private newPaddleWidth = 300
 
 // meta
   private cursors: any
@@ -47,12 +49,13 @@ export default class Demo extends Phaser.Scene {
   preload() {}
 
   create() {
+    const cornerSize = 50
+    const paddleOffset = 40
+
     this.cursors = this.input.keyboard.createCursorKeys()
 
     // paddles
     this.paddles = this.physics.add.group()
-    const paddleOffset = 40
-
     this.paddleObject.top = this.paddles
       .create(config.scale.width / 2, paddleOffset, 'paddle')
       .setDisplaySize(this.paddleWidth, this.paddleHeight)
@@ -65,10 +68,10 @@ export default class Demo extends Phaser.Scene {
       .setDisplaySize(this.paddleWidth, this.paddleHeight)
     this.paddleObject.left = this.paddles
       .create(paddleOffset, config.scale.width, 'paddle')
-      .setDisplaySize(this.paddleHeight, config.scale.height)
+      .setDisplaySize(this.paddleHeight, this.newPaddleWidth)
     this.paddleObject.right = this.paddles
       .create(config.scale.width - paddleOffset, config.scale.width, 'paddle')
-      .setDisplaySize(this.paddleHeight, config.scale.height)
+      .setDisplaySize(this.paddleHeight, this.newPaddleWidth)
 
     this.paddles.children.iterate((c: any) => {
       c.setTintFill(0xffffff)
@@ -91,7 +94,6 @@ export default class Demo extends Phaser.Scene {
     this.ball.setVelocityY(140)
 
     // corners
-    const cornerSize = 50
     this.corners = this.physics.add.staticGroup()
     this.corners.add(
       new Phaser.GameObjects.Rectangle(
@@ -138,6 +140,32 @@ export default class Demo extends Phaser.Scene {
       true
     )
     this.physics.add.collider(this.corners, this.paddles)
+
+    //walls
+    this.walls = this.physics.add.staticGroup()
+    this.walls.add(
+      new Phaser.GameObjects.Rectangle(
+        this,
+        cornerSize / 2,
+        config.scale.height / 2,
+        cornerSize,
+        config.scale.height,
+        0xfffffff
+      ),
+      true
+    )
+    this.walls.add(
+      new Phaser.GameObjects.Rectangle(
+        this,
+        config.scale.width - cornerSize / 2,
+        config.scale.height / 2,
+        cornerSize,
+        config.scale.height,
+        0xfffffff
+      ),
+      true
+    )
+    this.physics.add.collider(this.walls, this.ball)
 
     this.scoreText = this.add.text(10, 10, '0', { color: '#ff0000', fontSize: '32px' });
 
