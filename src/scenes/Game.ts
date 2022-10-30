@@ -3,14 +3,21 @@ import config from '../config'
 import Frame = Phaser.Textures.Frame
 
 export default class Demo extends Phaser.Scene {
+  // game objects
   private ball: any
   private corners: any
-  private gameOver = false
   private paddles?: Phaser.Physics.Arcade.Group
   private paddleObject: { [key: string]: Phaser.Physics.Arcade.Body } = {}
   private paddleHeight = 20
   private paddleWidth = 160
+
+// meta
   private cursors: any
+  private score: number = 0
+  private scoreText!: Phaser.GameObjects.Text
+  private gameOver = false
+
+
   constructor() {
     super('GameScene')
   }
@@ -30,6 +37,11 @@ export default class Demo extends Phaser.Scene {
         object.setAccelerationY(-acceleration)
       }
     }
+  }
+
+  onBallHit = () => {
+    this.score += 1
+    this.scoreText.setText(this.score.toString())
   }
 
   preload() {}
@@ -72,7 +84,7 @@ export default class Demo extends Phaser.Scene {
     this.ball.body.onWorldBounds = true
     this.ball.setBounce(1)
 
-    this.physics.add.collider(this.paddles, this.ball)
+    this.physics.add.collider(this.paddles, this.ball, this.onBallHit)
 
     let ballSpeed
     this.ball.setVelocityX(140)
@@ -126,6 +138,8 @@ export default class Demo extends Phaser.Scene {
       true
     )
     this.physics.add.collider(this.corners, this.paddles)
+
+    this.scoreText = this.add.text(10, 10, '0', { color: '#ff0000', fontSize: '32px' });
 
     // endgame conditions
     const endGame = () => {
