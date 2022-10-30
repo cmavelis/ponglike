@@ -66,12 +66,13 @@ export default class Demo extends Phaser.Scene {
         'paddle'
       )
       .setDisplaySize(this.paddleWidth, this.paddleHeight)
-    this.paddleObject.left = this.paddles
-      .create(paddleOffset, config.scale.width, 'paddle')
-      .setDisplaySize(this.paddleHeight, this.newPaddleWidth)
-    this.paddleObject.right = this.paddles
-      .create(config.scale.width - paddleOffset, config.scale.width, 'paddle')
-      .setDisplaySize(this.paddleHeight, this.newPaddleWidth)
+    // // removing paddles for demo
+    // this.paddleObject.left = this.paddles
+    //   .create(paddleOffset, config.scale.width, 'paddle')
+    //   .setDisplaySize(this.paddleHeight, this.newPaddleWidth)
+    // this.paddleObject.right = this.paddles
+    //   .create(config.scale.width - paddleOffset, config.scale.width, 'paddle')
+    //   .setDisplaySize(this.paddleHeight, this.newPaddleWidth)
 
     this.paddles.children.iterate((c: any) => {
       c.setTintFill(0xffffff)
