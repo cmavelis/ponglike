@@ -43,7 +43,6 @@ export default class Demo extends Phaser.Scene {
   onBallHit = (object1: Phaser.GameObjects.GameObject, object2: Phaser.GameObjects.GameObject) => {
     [object1, object2].forEach((o) => {
       if (o.name === 'paddle'){
-        console.log(o)
         // @ts-ignore  this line works :shrug:
         o.setScale(o._scaleX * 0.9, o._scaleY)
       }
